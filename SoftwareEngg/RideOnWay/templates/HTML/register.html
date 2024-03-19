@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Register</title>
     {% load static %}
  <link rel="stylesheet" href="{% static "CSS/loginRegister.css" %}">
 </head>
@@ -11,16 +11,17 @@
   <div id="formContent">
     <h2> Register </h2>
 
-    <form>
-      <input type="text" id="name" placeholder="name">
-      <input type="text" id="email"  placeholder="email">
-      <input type="text" id="password"  placeholder="password">
-      <input type="text" id="phoneNumber"  placeholder="phoneNumber">
-      <input type="submit" value="Register">
+    <form action="../Register/" method="post">
+        {% csrf_token %}
+      <input type="text" id="name" name ="name" placeholder="name">
+      <input type="text" id="email" name="email" placeholder="email">
+      <input type="text" id="password" name="password" placeholder="password">
+      <input type="text" id="phoneNumber" name="phoneNumber" placeholder="phoneNumber">
+      <input type="submit" name="submitButton" value="Register">
     </form>
 
     <div id="footer">
-        <h4>Already registered ? <a href="#">Login</a></h4>
+        <h4>Already registered ? <a href="../Login/">Login</a></h4>
     </div>
 
   </div>

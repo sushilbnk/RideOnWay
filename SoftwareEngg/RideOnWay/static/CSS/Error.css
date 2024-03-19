@@ -1,0 +1,17 @@
+body {
+  display: inline-block;
+  background: #735DA5 ;
+  height: 100vh;
+  margin: 0;
+  color: white;
+}
+
+h1 {
+  margin: 12px 48px;
+  font: 64px SansSerif;
+}
+p {
+  display: inline-block;
+  margin: 3px 48px;
+  font: 32px SansSerif;
+}

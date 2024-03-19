@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DashBoard</title>
+    {% load static %}
+ <link rel="stylesheet" href="{% static "CSS/DashBoard.css" %}">
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-title">
+      RideOnWay
+    </div>
+
+  <div class="links">
+    <a href="#" >My Rides</a>
+    <a href="#" >Notifications</a>
+    <a href="#" >Profile</a>
+    <a href="#" >About</a>
+    <a href="#" >Support</a>
+  </div>
+</div>
+
+<div class="container">
+    <div class="content">
+
+        <input type="button" class = "createRide" value="Create a Ride">
+
+        <input type="button" class = "requestRide" value="Request for a Ride">
+    </div>
+</div>
+</body>
+</html>

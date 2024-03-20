@@ -25,6 +25,10 @@ def register(request):
 def errorPage(request):
     return render(request, 'HTML/Error.html')
 
+
+
+#This is the login route
+
 def login(request):
     if request.method == "POST":
         email = request.POST.get("email")

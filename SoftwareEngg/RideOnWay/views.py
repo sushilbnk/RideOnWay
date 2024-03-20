@@ -47,13 +47,12 @@ def DashBoard(request):
     return render(request, 'HTML/Dashboard.html')
 
 
+def checkPassword(password, email):
+    user = User.objects.filter(email=email).first()
+    return user.password == password
+
 def checkIfUserExists(email):
     user = User.objects.filter(email=email).first()
     print(user, user is not None)
     print(User.objects.all().values())
     return user is not None
-
-
-def checkPassword(password, email):
-    user = User.objects.filter(email=email).first()
-    return user.password == password

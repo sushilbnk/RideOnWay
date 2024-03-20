@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from .models import User
 
 
-# Create your views here.
+
+# This is register route
+
 def register(request):
     if request.method == "POST":
         email = request.POST.get("email")
@@ -21,6 +23,7 @@ def register(request):
         else:
             return redirect('../Error/')
     return render(request, 'HTML/register.html')
+
 
 def errorPage(request):
     return render(request, 'HTML/Error.html')

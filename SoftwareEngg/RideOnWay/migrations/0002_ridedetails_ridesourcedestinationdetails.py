@@ -12,6 +12,16 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='RideDetails',
+            fields=[
+                ('rideId', models.AutoField(primary_key=True, serialize=False)),
+                ('numberOfPassengersLeft', models.IntegerField()),
+                ('passenger', models.IntegerField()),
+                ('isSeatAvailable', models.BooleanField()),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='RideOnWay.user')),
+            ],
+        ),
+        migrations.CreateModel(
             name='RideSourceDestinationDetails',
             fields=[
                 ('source', models.CharField(max_length=200)),

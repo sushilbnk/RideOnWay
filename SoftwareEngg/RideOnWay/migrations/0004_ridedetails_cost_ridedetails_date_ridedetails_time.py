@@ -16,4 +16,9 @@ class Migration(migrations.Migration):
             name='date',
             field=models.CharField(max_length=100, null=True),
         ),
+         migrations.AddField(
+            model_name='ridedetails',
+            name='time',
+            field=models.CharField(max_length=20, null=True),
+        ),
     ]

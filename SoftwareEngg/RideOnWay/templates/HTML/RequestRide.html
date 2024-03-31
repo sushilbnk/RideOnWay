@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RequestRide</title>
+</head>
+<body>
+<form class="container" action="../requestRide/" method="post">
+    {% csrf_token %}
+   <div class="searchBar">
+      <input type="text" class="searchText" name="searchText" id="searchText" placeholder={{ placeHolderValue }}>
+      <button type="submit" class="searchButton">
+        <i class="fa fa-search"></i>
+     </button>
+    </div>
+    <div class="app">
+      <div id="list" class="list">
+          {% if isDestinationPresent %}
+              {% for i in listOfRides %}
+                  <div class="item">
+                        Source: {{ i.source }} <br>
+                        Destination: {{ i.destination }}<br>
+                        Name: {{ i.name }}<br>
+                        Passengers Left: {{ i.numberOfPassengersLeft }}<br>
+                        Date: {{ i.date }}<br>
+                        Time: {{ i.time }}<br>
+                        <a href="../rideDetails/{{ i.rideId }}/">For more click here</a>
+                </div>
+
+              {% endfor %}
+          {% endif %}
+      </div>
+    </div>
+</form>
+</body>
+</html>

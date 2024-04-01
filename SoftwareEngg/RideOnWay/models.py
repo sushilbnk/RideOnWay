@@ -25,3 +25,10 @@ class RideSourceDestinationDetails(models.Model):
     sourceDestinationId = models.AutoField(primary_key=True)
     ride = models.ForeignKey(RideDetails, to_field='rideId', on_delete=models.CASCADE)
     isRideAvailable = models.BooleanField()
+
+class DriverReviews(models.Model):
+    reviewId = models.AutoField(primary_key=True)
+    review = models.TextField()
+    user = models.ForeignKey(User, to_field='userId', on_delete=models.CASCADE)
+    passengerId = models.IntegerField()
+    rideId = models.IntegerField()

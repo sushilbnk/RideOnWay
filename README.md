@@ -17,7 +17,7 @@ For regular commuters who always travel on the same route consistently every day
 
 ## Getting Started
 
-1. Clone the repository: `git clone https://github.com/your-repo/RideOnWay.git`
+1. Clone the repository: `git clone https://github.com/sushilbnk/RideOnWay.git`
 2. Install the required dependencies
 3. Set up the database
 4. Configure the application settings

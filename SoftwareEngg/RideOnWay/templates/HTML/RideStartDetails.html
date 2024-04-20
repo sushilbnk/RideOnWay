@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ride Details</title>
+    {% load static %}
+ <link rel="stylesheet" href="{% static "CSS/CreateRide.css" %}">
+</head>
+<body background="{% static "CSS/background2.png" %}">
+<div class="navbar">
+    <div class="navbar-title">
+      RideOnWay
+    </div>
+
+  <div class="links">
+    <a href="../../DashBoard/" >Home</a>
+    <a href="../../myRidesAsADriver/" >My Rides as Driver</a>
+    <a href="../../myRidesAsAPassenger/" >My Rides as Passenger</a>
+    <a href="../../Login/" >Logout</a>
+  </div>
+</div>
+<div class="Content">
+  <div id="formContent">
+    <h2> Ride Details </h2>
+      <br>
+      <h4>Source: {{ rideDetailsDictionary.source }}</h4>
+      <br>
+      <h4>Destination: {{ rideDetailsDictionary.destination }}</h4>
+      <br>
+      <h4>Passengers Left: {{ rideDetailsDictionary.numberOfPassengersLeft }}</h4>
+      <br>
+      <h4>Date: {{ rideDetailsDictionary.date }}</h4>
+      <br>
+      <h4>Time: {{ rideDetailsDictionary.time }}</h4>
+      <br>
+      <br>
+      {% if rideDetailsDictionary.ended %}
+      <h4>Ride Already Ended</h4>
+      {% elif rideDetailsDictionary.started %}
+        <form action="#" method="post">
+        {% csrf_token %}
+            <h4> Want to End Ride</h4>
+            <label>Yes</label><input type="radio" id="wantToRide" name="wantToRide" value="yes|EndRide">
+              <label>No</label><input type="radio" id="wantToRide" name="wantToRide" value="no|EndRide"><br><br>
+              <input type="submit" name="submitButton" value="Click To Confirm">
+        </form>
+      {% else %}
+    <form action="#" method="post">
+        {% csrf_token %}
+        <h4> Want to Start Ride</h4>
+        <label>Yes</label><input type="radio" id="wantToRide" name="wantToRide" value="yes|StartRide">
+      <label>No</label><input type="radio" id="wantToRide" name="wantToRide" value="no|StartRide"><br><br>
+      <input type="submit" name="submitButton" value="Click To Confirm">
+    </form>
+      {% endif %}
+  </div>
+</div>
+
+</body>
+</html>

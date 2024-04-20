@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+    {% load static %}
+ <link rel="stylesheet" href="{% static "CSS/DashBoard.css" %}">
+</head>
+<body background="{% static "CSS/background.jpeg" %}">
+<div class="container">
+    <div class="content">
+
+        <input type="button" class = "login" value="Login" id ="login">
+        <script type="text/javascript">
+            document.getElementById("login").onclick = function () {
+                location.href = "/Login/";
+            };
+        </script>
+        <input type="button" class = "register" value="Register" id="register">
+        <script type="text/javascript">
+            document.getElementById("register").onclick = function () {
+                location.href = "/Register/";
+            };
+        </script>
+    </div>
+</div>
+
+</body>
+</html>

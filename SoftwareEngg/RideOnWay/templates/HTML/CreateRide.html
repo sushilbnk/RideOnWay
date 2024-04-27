@@ -4,13 +4,26 @@
   <meta charset="UTF-8">
   <title>CreateRide</title>
     {% load static %}
- <link rel="stylesheet" href="{% static "CSS/CreateRide.css" %}">
+ 
+    <link rel="stylesheet" href="{% static "CSS/CreateRide.css" %}">
 </head>
-<body>
+<body background="{% static "CSS/background2.png" %}">
+<div class="navbar">
+    <div class="navbar-title">
+      RideOnWay
+    </div>
+
+  <div class="links">
+    <a href="../DashBoard/" >Home</a>
+    <a href="../myRidesAsADriver/" >My Rides as Driver</a>
+    <a href="../myRidesAsAPassenger/" >My Rides as Passenger</a>
+    <a href="../Login/" >Logout</a>
+  </div>
+</div>
 <div class="Content">
   <div id="formContent">
     <h2> Create a Ride </h2>
-
+    
     <form action="../createRide/" method="post">
         {% csrf_token %}
       <input type="text" id="email" name="email" placeholder="Email" required>

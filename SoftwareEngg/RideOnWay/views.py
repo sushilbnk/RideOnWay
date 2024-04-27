@@ -218,5 +218,16 @@ def requestRide(request):
 
 def driverDetails(request, userId):
     user = User.objects.filter(userId=userId).first()
-    userDetails = {"name": user.name,"phoneNumber": user.phoneNumber}
-    return render(request, "HTML/DriverDetails.html",{"userDetails":userDetails})
+    userRating = DriverRating.objects.filter(user_id=userId).first()
+    isReviewPresent = True
+    reviewList = []
+    if userRating is None:
+        isReviewPresent = False
+        rating = 0
+    else:
+        rating = userRating.overallRating
+        reviewList = getReviewList(userId)
+    print(reviewList)
+    userDetails = {"name": user.name, "phoneNumber": user.phoneNumber, "rating": rating}
+    return render(request, "HTML/DriverDetails.html",
+                  {"userDetails": userDetails, "isReviewPresent": isReviewPresent, "reviewList": reviewList})

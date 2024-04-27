@@ -6,14 +6,39 @@
     {% load static %}
  <link rel="stylesheet" href="{% static "CSS/loginRegister.css" %}">
 </head>
-<body>
+<body background="{% static "CSS/background2.png" %}">
+  <div class="navbar">
+    <div class="navbar-title">
+      RideOnWay
+    </div>
+
+  <div class="links">
+    <a href="../../DashBoard/" >Home</a>
+    <a href="../../myRidesAsADriver/" >My Rides as Driver</a>
+    <a href="../../myRidesAsAPassenger/" >My Rides as Passenger</a>
+    <a href="../../Login/" >Logout</a>
+  </div>
+</div>
 <div class="Content">
   <div id="formContent">
     <h2> Driver Details </h2>
       <br>
       <h4>Driver's Name: {{ userDetails.name }}</h4>
       <h4>Phone Number: {{ userDetails.phoneNumber }}</h4>
-      <h4>Overall Rating: 4/5</h4>
+      {% if isReviewPresent %}
+      <h4>Overall Rating: {{ userDetails.rating }}/5</h4><br>
+
+      <h4>Reviews</h4>
+          {% for i in reviewList %}
+
+          <div class="review">
+                Source: {{ i.review }} <br>
+                Destination: {{ i.rating }}<br>
+          </div>
+        {% endfor %}
+      {% else %}
+      <h4>No Reviews present</h4>
+      {% endif %}
   </div>
 </div>
 

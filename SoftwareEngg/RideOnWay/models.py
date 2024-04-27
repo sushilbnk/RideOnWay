@@ -32,3 +32,10 @@ class DriverReviews(models.Model):
     user = models.ForeignKey(User, to_field='userId', on_delete=models.CASCADE)
     passengerId = models.IntegerField()
     rideId = models.IntegerField()
+
+class DriverRating(models.Model):
+    driverRatingId = models.AutoField(primary_key=True)
+    overallRating = models.IntegerField(default=0)
+    totalNumberOfRides = models.IntegerField(default=0)
+    user = models.OneToOneField(User, to_field="userId", on_delete=models.CASCADE)
+

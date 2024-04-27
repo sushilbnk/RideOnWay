@@ -75,12 +75,12 @@ WSGI_APPLICATION = 'SoftwareEngg.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rideonway',
+        'NAME': 'rideshare',
         'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',  # or the hostname where your MySQL server is running
+        'PASSWORD': 'Sushil123',
+        'HOST': 'djangodb-1.cfek2m8w0kyh.us-east-1.rds.amazonaws.com',  # or the hostname where your MySQL server is running
         'PORT': '3306',      # or the port on which your MySQL server is listening
     }
 }

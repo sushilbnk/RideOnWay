@@ -4,9 +4,21 @@
   <meta charset="UTF-8">
   <title>Ride Details</title>
     {% load static %}
- <link rel="stylesheet" href="{% static "CSS/loginRegister.css" %}">
+ <link rel="stylesheet" href="{% static "CSS/CreateRide.css" %}">
 </head>
-<body>
+<body background="{% static "CSS/background2.png" %}">
+<div class="navbar">
+    <div class="navbar-title">
+      RideOnWay
+    </div>
+
+  <div class="links">
+    <a href="../../DashBoard/" >Home</a>
+    <a href="../../myRidesAsADriver/" >My Rides as Driver</a>
+    <a href="../../myRidesAsAPassenger/" >My Rides as Passenger</a>
+    <a href="../../Login/" >Logout</a>
+  </div>
+</div>
 <div class="Content">
   <div id="formContent">
     <h2> Ride Details </h2>

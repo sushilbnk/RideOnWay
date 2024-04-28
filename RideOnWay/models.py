@@ -13,10 +13,13 @@ class RideDetails(models.Model):
     numberOfPassengersLeft = models.IntegerField()
     user = models.ForeignKey(User, to_field='userId', on_delete=models.CASCADE)
     passenger = models.IntegerField(null=True)
+    relatedRideId = models.IntegerField(default=None, null=True)
     isSeatAvailable = models.BooleanField()
     time = models.CharField(max_length=20, null=True)
     date = models.CharField(max_length=100, null=True)
     cost = models.IntegerField(default=0)
+    isRideStarted = models.BooleanField(default=False)
+    isRideEnded = models.BooleanField(default=False)
 
 
 class RideSourceDestinationDetails(models.Model):

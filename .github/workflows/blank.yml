@@ -34,7 +34,7 @@ jobs:
            
       # Navigate to the directory containing manage.py
       - name: Change directory
-        run: cd SoftwareEngg/RideOnWay  # Adjust the directory path as needed
+        run: cd RideOnWay/SoftwareEngg  # Adjust the directory path as neededSoftwareEngg
         
       # Run Test Cases
       - name: Run Test Cases

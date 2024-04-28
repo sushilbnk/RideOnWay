@@ -36,6 +36,9 @@ jobs:
       - name: Run Test Cases
         run: |
            python3 manage.py SoftwareEngg.RideOnWay.tests # Replace with the command to run your project's tests
+      # Navigate to the directory containing manage.py
+      - name: Change directory
+        run: cd SoftwareEngg/RideOnWay  # Adjust the directory path as needed
 
       # Run the Application
       - name: Run the Application

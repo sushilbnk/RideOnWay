@@ -318,3 +318,23 @@ def driverDetails(request, userId):
     userDetails = {"name": user.name, "phoneNumber": user.phoneNumber, "rating": rating}
     return render(request, "HTML/DriverDetails.html",
                   {"userDetails": userDetails, "isReviewPresent": isReviewPresent, "reviewList": reviewList})
+
+
+def getReviewList(userId):
+    reviewList = []
+    driverReviews = DriverReviews.objects.filter(user_id=userId)
+    for review in driverReviews:
+        reviewList.append({"review": review.review, "rating": review.rating})
+    return reviewList
+
+
+def getPassengerList(userId, rideId):
+    passengerRides = RideDetails.objects.filter(user_id=userId, relatedRideId=rideId)
+    passengerList = []
+    for ride in passengerRides:
+        if ride.passenger is not None:
+            passengerProfile = User.objects.filter(userId=ride.passenger).first()
+            passengerList.append({"name": passengerProfile.name, "phoneNumber": passengerProfile.phoneNumber, "email": passengerProfile.email})
+            # print(passengerProfile.name, passengerProfile.phoneNumber)
+
+    return passengerList

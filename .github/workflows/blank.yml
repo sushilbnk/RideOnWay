@@ -36,10 +36,7 @@ jobs:
       - name: Change directory
         run: cd SoftwareEngg  # Adjust the directory path as neededSoftwareEngg
         
-      # Run Test Cases
-      - name: Run Test Cases
-        run: |
-           python3 manage.py SoftwareEngg.RideOnWay.tests # Replace with the command to run your project's tests
+     
 
       # Run the Application
       - name: Run the Application

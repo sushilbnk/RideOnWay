@@ -276,61 +276,32 @@ def MyRidesAsADriver(request):
     })
 
 
-
-def requestRide(request):
-    placeholder = "Enter_the_Destination"
-    isDestinationPresent = False
-    isSourcePresent = False
-    if request.method == "POST":
-        destinationSearch = request.POST.get('searchText')
-        sourceSearch = request.POST.get('sourceText')
-        listOfRides = []
-        if destinationSearch != '':
-            placeholder = destinationSearch
-            isDestinationPresent = True
-
-        if sourceSearch != '':
-            isSourcePresent = True
-
-        if isDestinationPresent and isSourcePresent:
-            rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(
-                destination=destinationSearch, source=sourceSearch)
-        elif isDestinationPresent:
-            rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(destination=destinationSearch)
-        elif isSourcePresent:
-            rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(source=sourceSearch)
-        else:
-            rideSourceDestinationDetails = []
-
-        for i in rideSourceDestinationDetails:
-            rideId = i.ride_id
-            rideDetailsByRideId = RideDetails.objects.filter(rideId=rideId).first()
-
-            if rideDetailsByRideId.isSeatAvailable and not rideDetailsByRideId.isRideEnded and not rideDetailsByRideId.isRideStarted:
-                numberOfPassengersLeft = rideDetailsByRideId.numberOfPassengersLeft
-                user = User.objects.filter(userId=rideDetailsByRideId.user_id).first()
-                listOfRides.append({
-                    "source": i.source,
-                    "destination": i.destination,
-                    "name": user.name,
-                    "numberOfPassengersLeft": numberOfPassengersLeft,
-                    "time": rideDetailsByRideId.time,
-                    "date": rideDetailsByRideId.date,
-                    "rideId": rideId
-                })
-
-        return render(request, 'HTML/RequestRide.html', {
-            "isDestinationPresent": isDestinationPresent,
-            "isSourcePresent": isSourcePresent,
-            "listOfRides": listOfRides,
-            "placeHolderValue": placeholder
-        })
-
-    return render(request, 'HTML/RequestRide.html', {
-        "placeHolderValue": placeholder,
-        "isDestinationPresent": isDestinationPresent,
-        "isSourcePresent": isSourcePresent
+def MyRidesAsAPassenger(request):
+    userId = request.COOKIES['id']
+    myRides = RideDetails.objects.filter(passenger=userId)
+    listOfRides = []
+    for ride in myRides:
+        myRideDetails = RideSourceDestinationDetails.objects.filter(ride_id=ride.rideId).first()
+        driverProfile = User.objects.filter(userId=ride.user_id).first()
+        listOfRides.append(
+            {"source": myRideDetails.source,
+             "destination": myRideDetails.destination,
+             "time": ride.time,
+             "date": ride.date,
+             "rideId": ride.rideId,
+             "driverName": driverProfile.name,
+             "driverPhoneNumber": driverProfile.phoneNumber,
+             "userId": driverProfile.userId
+             }
+        )
+    isRidePresent = True
+    if len(listOfRides) == 0:
+        isRidePresent = False
+    return render(request, "HTML/MyRidesAsPassenger.html", {
+        "listOfRides": listOfRides,
+        "isRidePresent": isRidePresent
     })
+
 
 def driverDetails(request, userId):
     user = User.objects.filter(userId=userId).first()

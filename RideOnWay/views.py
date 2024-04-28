@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import User
+from .models import User, RideDetails, RideSourceDestinationDetails, DriverReviews, DriverRating
+from django.core.mail import EmailMessage
+from django.template import loader
 
 
 
-# This is register route
 
 def register(request):
     if request.method == "POST":
@@ -25,20 +26,21 @@ def register(request):
     return render(request, 'HTML/register.html')
 
 
+
 def errorPage(request):
     return render(request, 'HTML/Error.html')
 
 
-
-#This is the login route
-
 def login(request):
     if request.method == "POST":
-        email = request.POST.get("email")
+        email = request.POST.get("email").lower()
         if checkIfUserExists(email):
             password = request.POST.get("password")
             if checkPassword(password, email):
-                return redirect('../DashBoard/')
+                user = User.objects.filter(email=email).first()
+                response = redirect('../DashBoard/')
+                response.set_cookie("id", user.userId)
+                return response
             return redirect('../Error/')
     return render(request, 'HTML/login.html')
 
@@ -47,41 +49,37 @@ def DashBoard(request):
     return render(request, 'HTML/Dashboard.html')
 
 
+
+def checkIfUserExists(email):
+    user = User.objects.filter(email=email).first()
+    return user is not None
+
+
 def checkPassword(password, email):
     user = User.objects.filter(email=email).first()
     return user.password == password
 
-def checkIfUserExists(email):
-    user = User.objects.filter(email=email).first()
-    print(user, user is not None)
-    print(User.objects.all().values())
-    return user is not None
 
 def createRide(request):
     if request.method == "POST":
-        email = request.POST.get("email")
-        if checkIfUserExists(email):
-            user = User.objects.filter(email=email).first()
-            userId = user.userId
-            rideDetails = RideDetails.objects.create(
-                numberOfPassengersLeft=request.POST.get('numberOfPassengers'),
-                user_id=userId,
-                passenger=None,
-                isSeatAvailable=True,
-                time=request.POST.get("time"),
-                date=request.POST.get("date"),
-                cost=request.POST.get("cost")
-            )
-            source = request.POST.get('source').lower()
-            destination = request.POST.get('destination').lower()
-            stop1 = request.POST.get('stop1').lower()
-            stop2 = request.POST.get('stop2').lower()
-            stop3 = request.POST.get('stop3').lower()
-            stopList = [stop1, stop2, stop3]
-            createRoutes(source, destination, stopList, rideDetails.rideId, rideDetails.isSeatAvailable)
-            return redirect('../DashBoard/')
-        else:
-            return redirect('../Error/')
+        userId = request.COOKIES['id']
+        rideDetails = RideDetails.objects.create(
+            numberOfPassengersLeft=request.POST.get('numberOfPassengers'),
+            user_id=userId,
+            passenger=None,
+            isSeatAvailable=True,
+            time=request.POST.get("time"),
+            date=request.POST.get("date"),
+            cost=request.POST.get("cost")
+        )
+        source = request.POST.get('source').lower()
+        destination = request.POST.get('destination').lower()
+        stop1 = request.POST.get('stop1').lower()
+        stop2 = request.POST.get('stop2').lower()
+        stop3 = request.POST.get('stop3').lower()
+        stopList = [stop1, stop2, stop3]
+        createRoutes(source, destination, stopList, rideDetails.rideId, rideDetails.isSeatAvailable)
+        return redirect('../DashBoard/')
     return render(request, 'HTML/CreateRide.html')
 
 
@@ -118,6 +116,7 @@ def createRoutes(source, destination, stopList, rideId, isRideAvailable):
                 )
                 rideSourceDestinationDetails.save()
 
+
 def rideDetails(request, rideId):
     passengerId = request.COOKIES['id']
     if request.method == "POST":
@@ -127,37 +126,45 @@ def rideDetails(request, rideId):
             rideDetailsByRideId = RideDetails.objects.filter(rideId=rideId).first()
             rideDetailsByRideId.numberOfPassengersLeft -= 1
             rideDetailsByRideId.save()
-            if rideDetailsByRideId.numberOfPassengersLeft != 0:
-                newRide = RideDetails.objects.create(
-                    numberOfPassengersLeft=0,
-                    user_id=rideDictionary["userId"],
-                    passenger=passengerId,
-                    isSeatAvailable=False,
-                    time=rideDictionary["time"],
-                    date=rideDictionary["date"],
-                    cost=rideDictionary["cost"]
-                )
-                newRide.save()
-                newRideSourceDestinationDetails = RideSourceDestinationDetails.objects.create(
-                    source=rideDictionary["source"],
-                    destination=rideDictionary["destination"],
-                    ride_id=newRide.rideId,
-                    isRideAvailable=False)
-                newRideSourceDestinationDetails.save()
-            else:
-                rideDetailsByRideId.passenger_id = passengerId
+            newRide = RideDetails.objects.create(
+                numberOfPassengersLeft=0,
+                user_id=rideDictionary["userId"],
+                passenger=passengerId,
+                isSeatAvailable=False,
+                relatedRideId=rideId,
+                time=rideDictionary["time"],
+                date=rideDictionary["date"],
+                cost=rideDictionary["cost"]
+            )
+            newRide.save()
+            newRideSourceDestinationDetails = RideSourceDestinationDetails.objects.create(
+                source=rideDictionary["source"],
+                destination=rideDictionary["destination"],
+                ride_id=newRide.rideId,
+                isRideAvailable=False)
+            newRideSourceDestinationDetails.save()
+
+            if rideDetailsByRideId.numberOfPassengersLeft == 0:
                 rideDetailsByRideId.isSeatAvailable = False
                 rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(ride_id=rideId).first()
                 rideSourceDestinationDetails.isRideAvailable = False
                 rideSourceDestinationDetails.save()
                 rideDetailsByRideId.save()
+                user = User.objects.filter(userId=rideDetailsByRideId.user_id).first()
+                sendEmailToDriver(user.email, {"name": user.name,
+                                               "source": rideDictionary["source"],
+                                               "destination": rideDictionary["destination"],
+                                               "time": rideDictionary["time"],
+                                               "date": rideDictionary["date"]})
+                # sendEmail to the driver saying the seats are full
         return redirect("../../DashBoard/")
     try:
         rideDictionary = getRideDetailsUsingRideId(rideId, passengerId)
         return render(request, 'HTML/RideDetails.html', {"rideDetailsDictionary": rideDictionary})
     except:
         return redirect('../Error/')
-    
+
+             
 def getRideDetailsUsingRideId(rideId, passengerId):
     rideDetailsByRideId = RideDetails.objects.filter(rideId=rideId).first()
     rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(ride_id=rideId).first()
@@ -238,64 +245,92 @@ def requestRide(request):
         "isSourcePresent": isSourcePresent
     })
 
+def MyRidesAsADriver(request):
+    userId = request.COOKIES['id']
+    myRides = RideDetails.objects.filter(user_id=userId, passenger=None)
+    listOfRides = []
+    for ride in myRides:
+        myRideDetails = RideSourceDestinationDetails.objects.filter(ride_id=ride.rideId).first()
+        passengerList = getPassengerList(userId, ride.rideId)
+        isPassengerPresent = True
+        if len(passengerList) == 0:
+            isPassengerPresent = False
 
+        listOfRides.append(
+            {"source": myRideDetails.source,
+             "destination": myRideDetails.destination,
+             "time": ride.time,
+             "date": ride.date,
+             "rideId": ride.rideId,
+             "isPassengerPresent": isPassengerPresent,
+             "passengerList": passengerList
+             }
+        )
 
-def getRideDetailsUsingRideId(rideId, passengerId):
-    rideDetailsByRideId = RideDetails.objects.filter(rideId=rideId).first()
-    rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(ride_id=rideId).first()
-    user = User.objects.filter(userId=rideDetailsByRideId.user_id).first()
-    presentRide = RideDetails.objects.filter(user_id=rideDetailsByRideId.user_id, passenger=passengerId).first()
-    ownRide = RideDetails.objects.filter(user_id=passengerId, rideId=rideId).first()
-    selected = False
-    if presentRide is not None or ownRide is not None:
-        selected = True
-    rideDictionary = {
-        "rideId": rideId,
-        "source": rideSourceDestinationDetails.source,
-        "destination": rideSourceDestinationDetails.destination,
-        "name": user.name,
-        "userId": user.userId,
-        "numberOfPassengersLeft": rideDetailsByRideId.numberOfPassengersLeft,
-        "date": rideDetailsByRideId.date,
-        "time": rideDetailsByRideId.time,
-        "cost": rideDetailsByRideId.cost,
-        "selected": selected
-    }
-    return rideDictionary
+    isRidePresent = True
+    if len(listOfRides) == 0:
+        isRidePresent = False
+    return render(request, "HTML/MyRidesAsDriver.html", {
+        "listOfRides": listOfRides,
+        "isRidePresent": isRidePresent,
+    })
+
 
 
 def requestRide(request):
     placeholder = "Enter_the_Destination"
     isDestinationPresent = False
+    isSourcePresent = False
     if request.method == "POST":
         destinationSearch = request.POST.get('searchText')
+        sourceSearch = request.POST.get('sourceText')
         listOfRides = []
         if destinationSearch != '':
             placeholder = destinationSearch
             isDestinationPresent = True
-            rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(destination=destinationSearch)
-            for i in rideSourceDestinationDetails:
-                rideId = i.ride_id
-                rideDetailsByRideId = RideDetails.objects.filter(rideId=rideId).first()
-                if rideDetailsByRideId.isSeatAvailable:
-                    numberOfPassengersLeft = rideDetailsByRideId.numberOfPassengersLeft
-                    user = User.objects.filter(userId=rideDetailsByRideId.user_id).first()
-                    listOfRides.append(
-                        {"source": i.source,
-                         "destination": destinationSearch,
-                         "name": user.name,
-                         "numberOfPassengersLeft": numberOfPassengersLeft,
-                         "time": rideDetailsByRideId.time,
-                         "date": rideDetailsByRideId.date,
-                         "rideId": rideId
-                         }
-                    )
-        return render(request, 'HTML/RequestRide.html',
-                      {"isDestinationPresent": isDestinationPresent, "listOfRides": listOfRides,
-                       "placeHolderValue": placeholder})
-    return render(request, 'HTML/RequestRide.html',
-                  {"placeHolderValue": placeholder, "isDestinationPresent": isDestinationPresent})
 
+        if sourceSearch != '':
+            isSourcePresent = True
+
+        if isDestinationPresent and isSourcePresent:
+            rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(
+                destination=destinationSearch, source=sourceSearch)
+        elif isDestinationPresent:
+            rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(destination=destinationSearch)
+        elif isSourcePresent:
+            rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(source=sourceSearch)
+        else:
+            rideSourceDestinationDetails = []
+
+        for i in rideSourceDestinationDetails:
+            rideId = i.ride_id
+            rideDetailsByRideId = RideDetails.objects.filter(rideId=rideId).first()
+
+            if rideDetailsByRideId.isSeatAvailable and not rideDetailsByRideId.isRideEnded and not rideDetailsByRideId.isRideStarted:
+                numberOfPassengersLeft = rideDetailsByRideId.numberOfPassengersLeft
+                user = User.objects.filter(userId=rideDetailsByRideId.user_id).first()
+                listOfRides.append({
+                    "source": i.source,
+                    "destination": i.destination,
+                    "name": user.name,
+                    "numberOfPassengersLeft": numberOfPassengersLeft,
+                    "time": rideDetailsByRideId.time,
+                    "date": rideDetailsByRideId.date,
+                    "rideId": rideId
+                })
+
+        return render(request, 'HTML/RequestRide.html', {
+            "isDestinationPresent": isDestinationPresent,
+            "isSourcePresent": isSourcePresent,
+            "listOfRides": listOfRides,
+            "placeHolderValue": placeholder
+        })
+
+    return render(request, 'HTML/RequestRide.html', {
+        "placeHolderValue": placeholder,
+        "isDestinationPresent": isDestinationPresent,
+        "isSourcePresent": isSourcePresent
+    })
 
 def driverDetails(request, userId):
     user = User.objects.filter(userId=userId).first()

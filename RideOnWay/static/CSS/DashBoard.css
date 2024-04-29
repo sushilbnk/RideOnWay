@@ -1,10 +1,5 @@
-html {
-  background-color: #735DA5;
-}
-
-
 body {
-  margin: 0px;
+  margin: 0;
   font-family:  sans-serif;
   height: 100vh;
 }
@@ -12,7 +7,7 @@ body {
 .navbar {
   height: 50px;
   width: 100%;
-  background-color: #D3C5E5;
+  background-color: #735DA5;
   position: relative;
 }
 
@@ -31,15 +26,15 @@ body {
 
 a {
   display: inline-block;
-  padding: 13px 10px 13px 10px;
+  padding: 14px;
   text-decoration: none;
   color: white;
 }
 
 a:hover {
-  background-color: #735DA5;
+  background-color: #D3C5E5;
   transition: 0.5s ease-in-out;
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
 .container{
@@ -55,7 +50,7 @@ a:hover {
 }
 
 input[type=button]  {
-  background-color: #D3C5E5;
+  background-color: #735DA5;
   width: 300px;
   border: none;
   color: white;
@@ -63,20 +58,15 @@ input[type=button]  {
   text-align: center;
   text-transform: uppercase;
   font-size: 13px;
-  box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+  box-shadow: 0 4px 8px rgba(38, 38, 38, 0.2);
   border-radius: 5px 5px 5px 5px;
   margin: 5px 20px 40px 20px;
   transition: all 0.5s ease-in-out;
 }
 
 input[type=button]:hover  {
-  background-color: #735DA5;
+  background-color: #D3C5E5;
 }
 * {
   box-sizing: border-box;
 }
-
-
-
-
-

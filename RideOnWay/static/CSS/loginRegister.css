@@ -1,10 +1,8 @@
-html {
-  background-color: #735DA5;
-}
 
 body {
   font-family:  sans-serif;
   height: 100vh;
+  margin: 0;
 }
 
 a {
@@ -41,7 +39,7 @@ h2 {
   max-width: 450px;
   position: relative;
   padding: 0px;
-  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 4px 8px rgba(38, 38, 38, 0.2);
   text-align: center;
 }
 
@@ -59,7 +57,7 @@ h2{
   border-bottom: 2px solid #D3C5E5;
 }
 
-input[type=submit]  {
+input[type=submit], input[type=button]  {
   background-color: #D3C5E5;
   border: none;
   color: white;
@@ -75,11 +73,11 @@ input[type=submit]  {
   transition: all 0.3s ease-in-out;
 }
 
-input[type=submit]:hover  {
+input[type=submit]:hover , input[type=button]:hover {
   background-color: #735DA5;
 }
 
-input[type=text] {
+input[type=text], input[type=email], input[type=number], input[type=password]{
   background-color: white;
   border: none;
   color: black;
@@ -95,7 +93,7 @@ input[type=text] {
   border-radius: 5px 5px 5px 5px;
 }
 
-input[type=text]:focus {
+input[type=text]:focus, input[type=email]:focus, input[type=number]:focus {
   background-color: whitesmoke;
   border-bottom: 2px solid #735DA5;
 }
@@ -103,7 +101,11 @@ input[type=text]:focus {
 *:focus {
     outline: none;
 }
-
+textarea{
+  height: 100px;
+  width: 50%
+}
 * {
   box-sizing: border-box;
 }
+/* component */

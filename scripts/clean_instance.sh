@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 #
-sudo rm -rf /home/ubuntu/RIDEONWAY-RIDE/*
+sudo rm -rf /home/ubuntu/RideOnWay/*

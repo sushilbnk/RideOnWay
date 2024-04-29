@@ -75,12 +75,12 @@ WSGI_APPLICATION = 'SoftwareEngg.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-     'default': {
+    'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rideshare',
+        'NAME': 'rideonway',
         'USER': 'root',
-        'PASSWORD': 'Sushil123',
-        'HOST': 'djangodb-1.cfek2m8w0kyh.us-east-1.rds.amazonaws.com',  # or the hostname where your MySQL server is running
+        'PASSWORD': 'Mysql@123',
+        'HOST': 'localhost',  # or the hostname where your MySQL server is running
         'PORT': '3306',      # or the port on which your MySQL server is listening
     }
 }
@@ -126,3 +126,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = ''

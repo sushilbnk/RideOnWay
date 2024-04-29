@@ -433,3 +433,36 @@ def rideStartDetails(request, rideId):
         "numberOfPassengersLeft": rideDetailsForStarting.numberOfPassengersLeft
     }
     return render(request, 'HTML/RideStartDetails.html', {"rideDetailsDictionary": rideDetailsDictionary})
+
+
+def sendEmailToDriver(emailId, content):
+    template = loader.get_template('HTMl/EmailTemplate.html').render(content)
+    print(template)
+    email = EmailMessage(
+        "The Ride is Full",
+        template,
+        #email
+        [emailId]
+    )
+    email.content_subtype = 'html'
+    result = email.send()
+    return result
+
+
+def sendEmailToPassengers(emailIdList, content):
+    template = loader.get_template('HTMl/PassengersEmailTemplate.html').render(content)
+    print(template)
+    email = EmailMessage(
+        ("The Ride has " + content['state']),
+        template,
+        #email
+        emailIdList
+    )
+    email.content_subtype = 'html'
+    result = email.send()
+    return result
+
+
+
+def home(request):
+    return render(request, "HTML/Home.html")

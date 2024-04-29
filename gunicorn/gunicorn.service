@@ -5,8 +5,8 @@ After=network.target
 [Service]
 User=ubuntu
 Group=www-data
-WorkingDirectory=/home/ubuntu/RIDEONWAY-RIDE
-ExecStart=/home/ubuntu/env/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/ubuntu/RIDEONWAY-RIDE/SoftwareEngg/SoftwareEngg.sock SoftwareEngg.wsgi:application
+WorkingDirectory=/home/ubuntu/RideOnWay
+ExecStart=/home/ubuntu/env/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/ubuntu/RideOnWay/SoftwareEngg/SoftwareEngg.sock SoftwareEngg.wsgi:application
 
        
 [Install]

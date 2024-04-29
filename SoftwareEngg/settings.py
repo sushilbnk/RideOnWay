@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-irmc^mor6&+&6u-3n#9n-l2k@#nvc1(zf_fiesm7v)0oe$$ac6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'RideOnWay.apps.RideonwayConfig',
+    'whitenoise.runserver_nostatic'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -77,10 +79,10 @@ WSGI_APPLICATION = 'SoftwareEngg.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rideonway',
+        'NAME': 'rideshare',
         'USER': 'root',
-        'PASSWORD': 'Mysql@123',
-        'HOST': 'localhost',  # or the hostname where your MySQL server is running
+        'PASSWORD': 'Sushil123',
+        'HOST': 'djangodb-1.cfek2m8w0kyh.us-east-1.rds.amazonaws.com',  # or the hostname where your MySQL server is running
         'PORT': '3306',      # or the port on which your MySQL server is listening
     }
 }

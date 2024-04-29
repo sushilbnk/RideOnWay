@@ -2,9 +2,9 @@ version: 0.0
 os: linux
 files: 
   - source: /
-    destination: /home/ubuntu/RIDEONWAY-RIDE
+    destination: /home/ubuntu/RideOnWay
 permissions:
-  - object: /home/ubuntu/RIDEONWAY-RIDE
+  - object: /home/ubuntu/RideOnWay
     owner: ubuntu
     group: ubuntu
 hooks:

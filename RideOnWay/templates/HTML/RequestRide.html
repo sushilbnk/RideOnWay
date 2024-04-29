@@ -6,18 +6,32 @@
     {% load static %}
  <link rel="stylesheet" href="{% static "CSS/RequestRide.css" %}">
 </head>
-<body>
+<body background="{% static "CSS/background2.png" %}">
+
+<div class="navbar">
+    <div class="navbar-title">
+      RideOnWay
+    </div>
+
+  <div class="links">
+    <a href="../DashBoard/" >Home</a>
+    <a href="../myRidesAsADriver/" >My Rides as Driver</a>
+    <a href="../myRidesAsAPassenger/" >My Rides as Passenger</a>
+    <a href="../Login/" >Logout</a>
+  </div>
+</div>
 <form class="container" action="../requestRide/" method="post">
     {% csrf_token %}
    <div class="searchBar">
-      <input type="text" class="searchText" name="searchText" id="searchText" placeholder={{ placeHolderValue }}>
-      <button type="submit" class="searchButton">
-        <i class="fa fa-search"></i>
+    <input type="text" class="searchText" name="sourceText" id="searchText" placeholder="Source">
+      <input type="text" class="searchText" name="searchText" id="searchText" placeholder="Destination">
+      <button type="submit" class="searchButton">Search
+
      </button>
     </div>
     <div class="app">
       <div id="list" class="list">
-          {% if isDestinationPresent %}
+          {% if isDestinationPresent or isSourcePresent %}
               {% for i in listOfRides %}
                   <div class="item">
                         Source: {{ i.source }} <br>
@@ -30,7 +44,16 @@
                 </div>
 
               {% endfor %}
+              {% if listOfRides|length <= 0 %}
+
+                  <div class="item" style="background: #D3C5E5">
+                      <h2>No Rides Present</h2>
+                    </div>
+                {% endif %}
+{#          {% else %}#}
+{#              <h4 id="noRidePresent">No Rides Present</h4>#}
           {% endif %}
+
       </div>
     </div>
 </form>

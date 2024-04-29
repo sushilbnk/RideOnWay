@@ -5,7 +5,6 @@ from django.template import loader
 
 
 
-
 def register(request):
     if request.method == "POST":
         email = request.POST.get("email")
@@ -20,11 +19,12 @@ def register(request):
                 name=name
             )
             user.save()
-            return redirect('../DashBoard/')
+            response = redirect('../DashBoard/')
+            response.set_cookie("id", user.userId)
+            return response
         else:
             return redirect('../Error/')
     return render(request, 'HTML/register.html')
-
 
 
 def errorPage(request):
@@ -338,3 +338,98 @@ def getPassengerList(userId, rideId):
             # print(passengerProfile.name, passengerProfile.phoneNumber)
 
     return passengerList
+
+
+def RideReview(request, rideId):
+    rideDetailsForReview = RideDetails.objects.filter(rideId=rideId).first()
+    user = User.objects.filter(userId=rideDetailsForReview.user_id).first()
+    rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(ride_id=rideId).first()
+    passengerId = request.COOKIES["id"]
+    if request.method == "POST":
+        rating = request.POST.get("rating")
+        review = request.POST.get("review")
+
+        driverReview = DriverReviews.objects.create(
+            review=review,
+            user_id=user.userId,
+            passengerId=passengerId,
+            rideId=rideId,
+            rating=rating)
+        driverRating = DriverRating.objects.filter(user_id=user.userId).first()
+        if driverRating is None:
+            driverRating = DriverRating.objects.create(
+                overallRating=rating,
+                totalNumberOfRides=1,
+                user_id=user.userId
+            )
+            driverRating.save()
+        else:
+            driverRating.overallRating = (driverRating.overallRating * driverRating.totalNumberOfRides + int(
+                rating)) // (
+                                                 driverRating.totalNumberOfRides + 1)
+            driverRating.totalNumberOfRides += 1
+            driverRating.save()
+
+    rideReview = DriverReviews.objects.filter(passengerId=passengerId, rideId=rideId).first()
+    isRideReviewGiven = False
+    if rideReview is not None:
+        isRideReviewGiven = True
+    rideDetailsDictionary = {
+        "name": user.name,
+        "source": rideSourceDestinationDetails.source,
+        "destination": rideSourceDestinationDetails.destination,
+        "isRideReviewGiven": isRideReviewGiven,
+        "rideId": rideId
+    }
+    return render(request, "HTML/RideReview.html", {"rideDetailsDictionary": rideDetailsDictionary})
+
+
+def rideStartDetails(request, rideId):
+    rideDetailsForStarting = RideDetails.objects.filter(rideId=rideId).first()
+    rideSourceDestinationDetails = RideSourceDestinationDetails.objects.filter(ride_id=rideId).first()
+    userId = request.COOKIES['id']
+    user = User.objects.filter(userId=userId).first()
+
+    if request.method == "POST":
+        value = request.POST.get("wantToRide")
+        if value == "yes|StartRide":
+            rideDetailsForStarting.isRideStarted = True
+            rideDetailsForStarting.save()
+            emailList = []
+            passengerList = getPassengerList(userId, rideId)
+            for passenger in passengerList:
+                emailList.append(passenger['email'])
+            content = {"source": rideSourceDestinationDetails.source,
+                       "destination": rideSourceDestinationDetails.destination,
+                       "time": rideDetailsForStarting.time,
+                       "date": rideDetailsForStarting.date,
+                       "state": "Started"}
+            sendEmailToPassengers(emailList, content)
+        elif value == "yes|EndRide":
+            rideDetailsForStarting.isRideEnded = True
+            rideDetailsForStarting.save()
+            passengerList = getPassengerList(userId, rideId)
+            emailList = []
+            for passenger in passengerList:
+                emailList.append(passenger['email'])
+            content ={ "source": rideSourceDestinationDetails.source,
+                       "destination": rideSourceDestinationDetails.destination,
+                       "time": rideDetailsForStarting.time,
+                       "date": rideDetailsForStarting.date,
+                       "state": "Ended"}
+            sendEmailToPassengers(emailList, content)
+
+        print(value)
+        # sendEmail(EndRide and Start Ride to the passengers)
+    rideDetailsDictionary = {
+        "name": user.name,
+        "source": rideSourceDestinationDetails.source,
+        "destination": rideSourceDestinationDetails.destination,
+        "started": rideDetailsForStarting.isRideStarted,
+        "ended": rideDetailsForStarting.isRideEnded,
+        "rideId": rideId,
+        "date": rideDetailsForStarting.date,
+        "time": rideDetailsForStarting.time,
+        "numberOfPassengersLeft": rideDetailsForStarting.numberOfPassengersLeft
+    }
+    return render(request, 'HTML/RideStartDetails.html', {"rideDetailsDictionary": rideDetailsDictionary})

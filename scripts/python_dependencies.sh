@@ -2,4 +2,4 @@
 
 virtualenv /home/ubuntu/env
 source /home/ubuntu/env/bin/activate
-pip install -r /home/ubuntu/RIDEONWAY-RIDE/requirements.txt
+pip install -r /home/ubuntu/RideOnWay/requirements.txt

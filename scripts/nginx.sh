@@ -7,7 +7,7 @@ sudo systemctl daemon-reload
 sudo rm -f /etc/nginx/sites-enabled/default
 
 # Copy nginx configuration file to sites-available directory
-sudo cp /home/ubuntu/RIDEONWAY-RIDE/nginx/nginx.conf /etc/nginx/sites-available/SoftwareEngg
+sudo cp /home/ubuntu/RideOnWay/nginx/nginx.conf /etc/nginx/sites-available/SoftwareEngg
 
 # Create symlink to enable the nginx configuration
 sudo ln -sf /etc/nginx/sites-available/SoftwareEngg /etc/nginx/sites-enabled/

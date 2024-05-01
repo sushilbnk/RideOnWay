@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Rides as Driver</title>
+    {% load static %}
+ <link rel="stylesheet" href="{% static "CSS/RequestRide.css" %}">
+</head>
+<body background="{% static "CSS/background2.png" %}">
+<div class="navbar">
+    <div class="navbar-title">
+      RideOnWay
+    </div>
+
+  <div class="links">
+    <a href="../DashBoard/" >Home</a>
+    <a href="../myRidesAsADriver/" >My Rides as Driver</a>
+    <a href="../myRidesAsAPassenger/" >My Rides as Passenger</a>
+    <a href="../Login/" >Logout</a>
+  </div>
+</div>
+<div class = "container">
+    <div class="app">
+      <div id="list" class="list">
+          {% if isRidePresent %}
+              {% for i in listOfRides %}
+                  <div class="item">
+                        Source: {{ i.source }} <br>
+                        Destination: {{ i.destination }}<br>
+
+                        {% if i.isPassengerPresent %}
+                            Passenger List:<br><br>
+                            {% for j in i.passengerList %}
+                                &nbsp;&nbsp;&nbsp; Name: {{ j.name }}<br>
+                               &nbsp;&nbsp;&nbsp; Phone Number: {{ j.phoneNumber }}<br><br>
+                            {% endfor %}
+                            <a href="../rideStart/{{ i.rideId }}">Click Here For Other Details and to Start the Ride.</a>
+                        {% else %}
+                            <h4> No Passengers Yet</h4>
+                        {% endif %}
+                </div>
+
+              {% endfor %}
+          {% else %}
+              <div class="item" style="background: #D3C5E5">
+                  <h2>No Rides Present</h2>
+                </div>
+          {% endif %}
+      </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CreateRide</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "CSS/CreateRide.css" %}">
+</head>
+<body background="{% static "CSS/background2.png" %}">
+<div class="navbar">
+    <div class="navbar-title">
+      RideOnWay
+    </div>
+
+  <div class="links">
+    <a href="../DashBoard/" >Home</a>
+    <a href="../myRidesAsADriver/" >My Rides as Driver</a>
+    <a href="../myRidesAsAPassenger/" >My Rides as Passenger</a>
+    <a href="../Login/" >Logout</a>
+  </div>
+</div>
+<div class="Content">
+  <div id="formContent">
+    <h2> Create a Ride </h2>
+    
+    <form action="../createRide/" method="post">
+        {% csrf_token %}
+      <input type="text" id="email" name="email" placeholder="Email" required>
+      <input type="text" id="source" name="source" placeholder="Add the Starting point" required>
+      <input type="text" id="destination" name="destination" placeholder="Add the End point" required>
+      <input type="text" id="destination1" name="stop1" placeholder="Add the first stop">
+      <input type="text" id="destination2" name="stop2" placeholder="Add the second stop">
+      <input type="text" id="destination3" name="stop3" placeholder="Add the third stop">
+      <input type="number" id="numberOfPassengers" name="numberOfPassengers" placeholder="Number Of Passengers" required>
+      <input type="number" id="cost" name="cost" placeholder="Price for each passenger" required>
+      <input type="time" id="time" name="time"  required>
+      <input type="date" id="date" name="date"  required>
+      <input type="submit" name="submitButton" value="create Ride">
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
